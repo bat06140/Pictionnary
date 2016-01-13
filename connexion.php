@@ -1,6 +1,6 @@
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<a href="inscription.php">Inscrivez-vous</a>
-<div class="container">
+<?php
+    include 'header.php';
+?>
     <h2>Connectez-vous</h2>
     <form class="connexion form-horizontal" action="req_login.php" method="post" name="connexion">
 
