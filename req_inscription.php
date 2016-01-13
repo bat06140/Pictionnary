@@ -26,17 +26,15 @@
 
         // Vérifier si un utilisateur avec cette adresse email existe dans la table.
         // En SQL: sélectionner tous les tuples de la table USERS tels que l'email est égal à $email.
-        $sql = $dbh->prepare("SELECT * FROM users WHERE email='".$email."'");
-        $sql->execute();
-        $nbRow=count($sql->fetchAll());
-        if ($nbRow>=1) {
+        $sql = $dbh->query("SELECT * FROM users WHERE email='".$email."'");
+        if ($sql->rowCount()>=1) {
 
-            $error="Email déjà existant";
-            $params= "?nom=".$nom."&prenom=".$prenom."&tel=".$tel."&website=".$website."&sexe=".$sexe."&birthdate=".$birthdate."&ville=".$ville."&taille=".$taille."&couleur=".$couleur."&profilpic=".$profilepic;
+            $error="Email déjà existant !";
+            $params= "?nom=".urlencode($nom)."&prenom=".urlencode($prenom)."&tel=".urlencode($tel)."&website=".urlencode($website).
+                "&sexe=".urlencode($sexe)."&birthdate=".urlencode($birthdate)."&ville=".urlencode($ville).
+                "&taille=".urlencode($taille)."&couleur=".urlencode($couleur)."&error=".urlencode($error);
             header('Location: ./inscription.php'.$params);
-
-            // rediriger l'utilisateur ici, avec tous les paramètres du formulaire plus le message d'erreur
-            // utiliser à bon escient la méthode htmlspecialchars http://www.php.net/manual/fr/function.htmlspecialchars.php          // et/ou la méthode urlencode http://php.net/manual/fr/function.urlencode.php
+            exit();
         }
         else {
             // Tenter d'inscrire l'utilisateur dans la base
@@ -76,7 +74,7 @@
                 // ensuite on requête à nouveau la base pour l'utilisateur qui vient d'être inscrit, et
                 $sql = $dbh->query("SELECT u.id, u.email, u.nom, u.prenom, u.couleur, u.profilepic FROM USERS u WHERE u.email='" . $email . "'");
                 if ($sql->rowCount() < 1) {
-                    header("Location: main.php?erreur=" . urlencode("un problème est survenu"));
+                    header("Location: inscription.php?error=" . urlencode("un problème est survenu"));
                 } else {
                     // on récupère la ligne qui nous intéresse avec $sql->fetch(),
                     $result=$sql->fetch(PDO::FETCH_ASSOC);
